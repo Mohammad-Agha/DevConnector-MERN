@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 const gravatar = require('gravatar')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const { check, validationResult} = require('express-validator')
 const User = require('../../models/User')
+require('dotenv/config')
 
 /**
  * @route  POST api/users
@@ -42,7 +44,15 @@ router.post('/',
     await user.save()
 
     // Return token
-    res.send('User registered')
+    const payLoad = {
+      user: {
+        id: user.id
+      }
+    }
+    jwt.sign(payLoad, process.env.jwtSecret, (err, token) => {
+      if(err) throw err
+      res.json({ token })
+    })
 
   } catch (error) {
     console.error(error.message)
