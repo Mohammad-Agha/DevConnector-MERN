@@ -38,7 +38,9 @@ router.post('/',
   // If there are anything wrong with the validation
   if(!errors.isEmpty()) return res.status(400).json({ errors: errors.array() })
 
-  const { email, password } = req.body
+  const { password } = req.body
+
+  const email = req.body.email.toLowerCase()
 
   try {
     // Check if email is valid
